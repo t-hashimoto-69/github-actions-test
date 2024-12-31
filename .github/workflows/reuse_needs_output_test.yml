@@ -39,13 +39,12 @@ jobs:
     env:
       NEEDS: ${{ toJSON(needs) }}
     steps:
-      - name: test 1
-        id: test_1
+      - name: test result
         uses: actions/github-script@v7
         with:
           result-encoding: string
           script: |
-            const needs = ${{ env.NEEDS }};
+            const needs = JSON.parse("${{ env.NEEDS }}");
             console.log(needs);
             const test_result = Object.keys(needs).map(jobId => needs[jobId].outputs.test_result);
             console.log(test_result);
