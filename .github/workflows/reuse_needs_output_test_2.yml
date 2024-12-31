@@ -1,0 +1,22 @@
+name: needs output test
+
+on:
+  workflow_call:
+    inputs:
+      needs:
+        required: true
+        type: string
+jobs:
+  test_result:
+    name: test result
+    runs-on: ubuntu-latest
+    steps:
+      - name: test result
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            const needs = ${{ inputs.needs }};
+            console.log(needs);
+            const test_result = Object.keys(needs).map(jobId => needs[jobId].outputs.test_result);
+            console.log(test_result);

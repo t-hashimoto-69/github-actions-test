@@ -35,16 +35,7 @@ jobs:
     name: test result
     needs: [test_A, test_B]
     if: ${{ always() }}
-    runs-on: ubuntu-latest
-    env:
-      NEEDS: ${{ toJSON(needs) }}
-    steps:
-      - name: test result
-        uses: actions/github-script@v7
-        with:
-          result-encoding: string
-          script: |
-            const needs = ${{ needs }};
-            console.log(needs);
-            const test_result = Object.keys(needs).map(jobId => needs[jobId].outputs.test_result);
-            console.log(test_result);
+    uses: ./.github/workflows/reuse_needs_output_test_2.yml
+    secrets: inherit
+    with:
+      needs: ${{ toJSON(needs) }}
