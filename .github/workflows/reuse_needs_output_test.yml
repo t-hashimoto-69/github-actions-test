@@ -13,6 +13,7 @@ jobs:
         id: test_1
         uses: actions/github-script@v7
         with:
+          result-encoding: string
           script: |
             return 'Successful';
 
@@ -26,6 +27,7 @@ jobs:
         id: test_1
         uses: actions/github-script@v7
         with:
+          result-encoding: string
           script: |
             return 'Failed';
 
@@ -41,8 +43,9 @@ jobs:
         id: test_1
         uses: actions/github-script@v7
         with:
+          result-encoding: string
           script: |
             const needs = ${{ env.NEEDS }};
             console.log(needs);
-            const test_result = needs.map(need => need.outputs.test_result);
+            const test_result = Object.keys(needs).map(jobId => needs[jobId].outputs.test_result);
             console.log(test_result);
