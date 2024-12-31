@@ -1,0 +1,12 @@
+name: Dummy Dispatch workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  dummy_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: echo test
+        run: |
+          echo "hello world"
