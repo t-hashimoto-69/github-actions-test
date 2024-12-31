@@ -1,0 +1,48 @@
+name: needs output test
+
+on:
+  workflow_call:
+jobs:
+  test_A:
+    name: test A
+    runs-on: ubuntu-latest
+    outputs:
+      test_result: ${{ steps.test_1.outputs.result }}
+    steps:
+      - name: test 1
+        id: test_1
+        uses: actions/github-script@v7
+        with:
+          script: |
+            return 'Successful';
+
+  test_B:
+    name: test B
+    runs-on: ubuntu-latest
+    outputs:
+      test_result: ${{ steps.test_1.outputs.result }}
+    steps:
+      - name: test 1
+        id: test_1
+        uses: actions/github-script@v7
+        with:
+          script: |
+            return 'Failed';
+
+  test_result:
+    name: test result
+    needs: [test_A, test_B]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    env:
+      NEEDS: ${{ toJSON(needs) }}
+    steps:
+      - name: test 1
+        id: test_1
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const needs = ${{ env.NEEDS }};
+            console.log(needs);
+            const test_result = needs.map(need => need.outputs.test_result);
+            console.log(test_result);
