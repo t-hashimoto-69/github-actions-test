@@ -13,5 +13,5 @@ runs:
       uses: actions/github-script@v7
       with:
         script: |
-          const comment = ${{ inputs.comment }};
+          const comment = "${{ inputs.comment }}";
           console.log(comment);
