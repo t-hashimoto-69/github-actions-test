@@ -1,0 +1,34 @@
+name: actions/github-script test
+
+on:
+  workflow_call:
+jobs:
+  test_github_script:
+    name: Test actions/github-script
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: bash_output
+        shell: bash
+        run: |
+          comment="bash comment"
+          echo "comment=${comment}" >> $GITHUB_OUTPUT
+
+      - id: script_output
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            const comment = "script comment";
+            return comment;
+
+      - name: console.log bash output
+        uses: ./.github/actions/console-log
+        with:
+          comment: ${{ steps.bash_output.outputs.comment }}
+
+      - name: console.log script output
+        uses: ./.github/actions/console-log
+        with:
+          comment: ${{ steps.script_output.outputs.result }}

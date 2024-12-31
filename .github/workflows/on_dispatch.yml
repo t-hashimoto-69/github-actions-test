@@ -5,8 +5,6 @@ on:
 
 jobs:
   dummy_job:
-    runs-on: ubuntu-latest
-    steps:
-      - name: echo test
-        run: |
-          echo "hello world"
+    name: Test
+    uses: ./.github/workflows/reuse_github_script_test.yml
+    secrets: inherit

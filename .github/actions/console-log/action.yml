@@ -1,0 +1,17 @@
+name: Console.log comment
+description: Console.log comment
+
+inputs:
+  comment:
+    description: comment
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Console.log comment
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const comment = ${{ inputs.comment }};
+          console.log(comment);
