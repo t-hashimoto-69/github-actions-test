@@ -44,7 +44,7 @@ jobs:
         with:
           result-encoding: string
           script: |
-            const needs = JSON.parse("${{ env.NEEDS }}");
+            const needs = ${{ needs }};
             console.log(needs);
             const test_result = Object.keys(needs).map(jobId => needs[jobId].outputs.test_result);
             console.log(test_result);
