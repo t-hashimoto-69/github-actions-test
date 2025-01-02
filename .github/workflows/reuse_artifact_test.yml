@@ -1,0 +1,53 @@
+name: artifact test
+
+on:
+  workflow_call:
+    inputs:
+      artifact_prefix:
+        required: false
+        type: string
+        default: test-artifact
+jobs:
+  create_artifact_1:
+    name: create artifact 1
+    uses: ./.github/workflows/reuse_artifact_create.yml
+    secrets: inherit
+    with:
+      name: ${{ inputs.artifact_prefix }}-1
+      contents: "ABCDE"
+
+  create_artifact_2:
+    name: create artifact 2
+    uses: ./.github/workflows/reuse_artifact_create.yml
+    secrets: inherit
+    with:
+      name: ${{ inputs.artifact_prefix }}-2
+      contents: "12345"
+
+  download_artifact:
+    name: download artifact
+    runs-on: ubuntu-latest
+    env:
+      artifacts_path: artifacts
+    steps:
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ${{ env.artifacts_path }}
+          pattern: ${{ inputs.artifact_prefix }}*
+          merge-multiple: true
+
+      - name: test result
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            const fs = require('fs');
+            const messages = [];
+            const artifacts = fs.readdirSync("${{ env.artifacts_path }}");
+            console.log(`artifacts: ${artifacts}`);
+
+            for (const artifact of artifacts) {
+              messages.push(fs.readFileSync(`${{ env.artifacts_path }}/${artifact}`, 'utf8'));
+            }
+            console.log(messages.join("\n"));

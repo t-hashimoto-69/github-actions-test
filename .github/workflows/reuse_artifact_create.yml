@@ -1,0 +1,30 @@
+name: create artifact
+
+on:
+  workflow_call:
+    inputs:
+      name:
+        required: true
+        type: string
+      contents:
+        required: true
+        type: string
+jobs:
+  create_artifact:
+    name: create artifact
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create artifact
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const contents = ${{ inputs.contents }};
+            fs.writeFileSync( "${{ inputs.name }}.txt", contents );
+  
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.name }}
+          path: ${{ inputs.name }}.txt
+          retention-days: 1
