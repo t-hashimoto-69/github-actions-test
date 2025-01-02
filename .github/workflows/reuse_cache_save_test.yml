@@ -1,0 +1,44 @@
+name: cache save test
+
+on:
+  workflow_call:
+jobs:
+  cache_save:
+    name: cache save
+    runs-on: ubuntu-latest
+    env:
+      cache_key: cache_2025_01_01  # ※ 本来このような適当なkeyは使用しない
+      cache_dir: cache_test
+    steps:
+      - name: Cache restore/save
+        id: cache_restore
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.cache_dir }}
+          key: ${{ env.cache_key }}
+
+      - name: Create cache file
+        if: steps.cache_restore.outputs.cache-hit != 'true'
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            const fs = require('fs');
+            fs.mkdirSync("${{ env.cache_dir }}");
+            fs.writeFileSync( "${{ env.cache_dir }}/cache_test_1.txt", "123456789" );
+            fs.writeFileSync( "${{ env.cache_dir }}/cache_test_2.txt", "987654321" );
+
+      - name: Read cache file
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            const fs = require('fs');
+            const messages = [];
+            const caches = fs.readdirSync("${{ env.cache_dir }}");
+            console.log(`caches: ${caches}`);
+
+            for (const cache of caches) {
+              messages.push(fs.readFileSync(`${{ env.cache_dir }}/${cache}`, 'utf8'));
+            }
+            console.log(messages.join("\n"));

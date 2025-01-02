@@ -12,6 +12,7 @@ runs:
     - name: Console.log comment
       uses: actions/github-script@v7
       with:
+        result-encoding: string
         script: |
           const comment = "${{ inputs.comment }}";
           console.log(comment);
