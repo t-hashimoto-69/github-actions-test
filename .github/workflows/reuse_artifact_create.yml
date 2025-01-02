@@ -19,7 +19,7 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const contents = ${{ inputs.contents }};
+            const contents = "${{ inputs.contents }}";
             fs.writeFileSync( "${{ inputs.name }}.txt", contents );
   
       - name: Upload artifact

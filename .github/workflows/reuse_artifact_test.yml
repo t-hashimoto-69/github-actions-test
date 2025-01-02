@@ -27,6 +27,7 @@ jobs:
   download_artifact:
     name: download artifact
     runs-on: ubuntu-latest
+    needs: [create_artifact_1, create_artifact_2]
     env:
       artifacts_path: artifacts
     steps:
